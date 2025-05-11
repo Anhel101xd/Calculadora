@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>Calculadora de Deudas Grupales</title>
+<style>
+        body {
+            background-color: #121212;
+            color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background-color: #1f1f1f;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2, h3 {
+            text-align: center;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 6px;
+            border-radius: 5px;
+            border: 1px solid #444;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #444;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+        }
+    
+        #persona, #monto, #montoTodos {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Calculadora de Deudas Grupales</h2>
+<p style="text-align:center; font-style:italic; color:#00c3ff; font-weight: bold; font-size: 16px;">By Miguel Frías</p>
+<div>
+<h3>Movimiento individual</h3>
+<select id="persona">
+<option>Lucia</option>
+<option>Estefanía</option>
+<option>Isabel</option>
+<option>Adolfo</option>
+<option>Marcos</option>
+<option>Choncho</option>
+<option>Sofía</option>
+</select>
+<input id="monto" placeholder="Ej. 500 o -600" type="number"/>
+
+</div>
+<div>
+<h3>Movimiento para todos</h3>
+<input id="montoTodos" placeholder="Ej. 700 o -500" type="number"/>
+
+</div>
+<h3>Saldos actuales</h3>
+<table id="tablaSaldos">
+<!-- Aquí se mostrarán los saldos -->
+</table>
+</div>
+<script>
+    const saldos = {
+        "Lucia": 0,
+        "Estefanía": 0,
+        "Isabel": 0,
+        "Adolfo": 0,
+        "Marcos": 0,
+        "Choncho": 0,
+        "Sofía": 0
+    };
+
+    function actualizarTabla() {
+        const tabla = document.getElementById("tablaSaldos");
+        tabla.innerHTML = "<tr><th>Persona</th><th>Saldo</th></tr>";
+        for (const persona in saldos) {
+            tabla.innerHTML += `<tr><td>${persona}</td><td>$${saldos[persona].toFixed(2)}</td></tr>`;
+        }
+    }
+
+    function agregarMovimiento() {
+        const persona = document.getElementById("persona").value;
+        const monto = parseFloat(document.getElementById("monto").value);
+        if (!isNaN(monto)) {
+            saldos[persona] += monto;
+            actualizarTabla();
+        }
+        document.getElementById("monto").value = "";
+    }
+
+    function agregarParaTodos() {
+        const monto = parseFloat(document.getElementById("montoTodos").value);
+        if (!isNaN(monto)) {
+            for (const persona in saldos) {
+                saldos[persona] += monto;
+            }
+            actualizarTabla();
+        }
+        document.getElementById("montoTodos").value = "";
+    }
+
+    // Permitir usar ENTER en el input individual
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("monto").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                agregarMovimiento();
+            }
+        });
+    
+        document.getElementById("montoTodos").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                agregarParaTodos();
+            }
+        });
+    });
+
+    actualizarTabla();
+</script>
+</body>
+</html>
